@@ -1,14 +1,30 @@
+---
+title: "Survey Codes"
+output: html_document
+date: "2024-04-30"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load libraries}
 library(dplyr)
 library(ggplot2)
 library(readr)
 library(tibble)
 
+```
+
+## Including Plots
+
+
+```{r Demographics}
 generativeAI <- read_csv("The Use of Generative AI for Students.csv")
 as_tibble(generativeAI)
 
 generativeAI2 <- generativeAI
-
-View(generativeAI2)
 
 #factor sex
 factor_sex <- factor(generativeAI2$Sex, levels = c("Male", "Female")) 
@@ -37,35 +53,27 @@ factor_frequency_use <- factor(generativeAI2$`How often do you use generative AI
                                           "Once a week",
                                           "Less often"))
 factor_frequency_use <- as.integer(factor_frequency_use)
+```
 
 
-
+```{r Performance Expectancy}
 #performance expectancy 
 perf_expect_cols <- generativeAI2[, 9:12]
 mean_expect_cols <- colMeans(perf_expect_cols)
 perf_expect_cols <- as.data.frame(mean_expect_cols)
 perf_expect_cols$total_mean <- mean(mean_expect_cols)
 perf_expect_cols$standard_deviation <- sapply(perf_expect_cols, sd)
-View(perf_expect_cols)
 
+```
 
-
-
-
-
+```{r Effort Expectancy}
 #Read the CSV
 survey <- read.csv("The Use of Generative AI for Students.csv")
 surveyQ <- read.csv("The Use of Generative AI for Students.csv", header = FALSE)
 
-View(surveyQ)
-View(survey)
 
-
-
-View(survey)
 #Make it a table
 surveyDF <- as_tibble(survey)
-
 
 
 #Effort Expectancy
@@ -85,14 +93,11 @@ labelEA <- as.vector(unlist(surveyQ[1, 13:16]))
 
 surveyEA <- cbind(labelEA, surveyEA)
 colnames(surveyEA)[1] <- "Effort Expectancy"
+```
 
-View(surveyEA)
-
-
-
+```{r Attitude Towards Technology}
 #Attitude toward using technology
 surveyATOG <- surveyDF[17:20]
-View(surveyATOG)
 
 #Calculate the mean of each Column
 surveyAT <- colMeans(surveyATOG)
@@ -107,15 +112,12 @@ labelAT <- as.vector(unlist(surveyQ[1, 17:20]))
 surveyAT <- cbind(labelAT, surveyAT)
 colnames(surveyAT)[1] <- "Facilitating Conditions"
 
-#View the table
-View(surveyAT)
+```
 
-
-
-
+```{r Social Influence}
 #Social Influence
 surveySIOG <- surveyDF[21:24]
-View(surveySIOG)
+
 
 #Calculate the mean of each Column
 surveySI <- colMeans(surveySIOG)
@@ -129,14 +131,12 @@ colnames(surveySI) <- c("Mean", "SD")
 labelSI <- as.vector(unlist(surveyQ[1, 21:24]))
 surveySI <- cbind(labelSI, surveySI)
 colnames(surveySI)[1] <- "Facilitating Conditions"
+```
 
-#View the table
-View(surveySI)
-
-
+```{r Facilitating Conditions}
 #Facilitating Conditions Range
 surveyFCOG<- surveyDF[25:28]
-view(surveyFCOG)
+
 
 #Calculate the mean of each Column
 surveyFC <- colMeans(surveyFCOG)
@@ -150,15 +150,12 @@ colnames(surveyFC) <- c("Mean", "SD")
 labelFC <- as.vector(unlist(surveyQ[1, 25:28]))
 surveyFC <- cbind(labelFC, surveyFC)
 colnames(surveyFC)[1] <- "Facilitating Conditions"
+```
 
-#View the table
-View(surveyFC)
-
-
-#Usage Range
+```{r Behavioral Intentions}
 #Usage Range
 surveyBIOG <- surveyDF[26:39]
-View(surveyBIOG)
+
 
 #Calculate the mean of each Column
 surveyBI <- colMeans(surveyBIOG)
@@ -167,20 +164,19 @@ surveyBI <- tibble(surveyBI)
 
 #Calculate SD of each column
 surveyBI <- mutate(surveyBI, SD = sapply(surveyBIOG , sd))
-View(surveyBI)
+
 colnames(surveyBI)[1] <- "Mean"
 labelBI <- as.vector(unlist(surveyQ[1, 26:39]))
 surveyBI <- cbind(labelBI, surveyBI)
 colnames(surveyBI)[1] <- "Usage"
 
-View(surveyBI)
+```
 
-
-
+```{r Whole Survey Data}
 #Whole Survey
 
 surveyALLOG <- surveyDF[9:39]
-View(surveyALLOG)
+
 
 #Calculate the mean of each Column
 surveyALL <- colMeans(surveyALLOG)
@@ -194,9 +190,9 @@ colnames(surveyALL) <- c("Mean", "SD")
 labelALL <- as.vector(unlist(surveyQ[1, 9:39]))
 surveyALL <- cbind(labelALL, surveyALL)
 colnames(surveyALL)[1] <- "Whole Survey"
+```
 
-#View the table
-View(surveyALL)
+
 
 
 
