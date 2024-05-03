@@ -1,0 +1,280 @@
+---
+title: "Graphs for Data 3G"
+author: "Anton Geganzo"
+date: "2024-04-30"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r Code}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tibble)
+
+generativeAI <- read_csv("The Use of Generative AI for Students.csv")
+as_tibble(generativeAI)
+
+generativeAI2 <- generativeAI
+
+generativeAI2 <- generativeAI[,-5] #remove not useful column 
+
+View(generativeAI2)
+
+#factor sex
+factor_sex <- factor(generativeAI2$Sex, levels = c("Male", "Female")) 
+factor_sex <- as.integer(factor_sex)
+
+#factor age
+factor_age <- factor(generativeAI2$`Age:`, levels = c("Under 18", "18-24", "25-34", "35 and above"))
+factor_age <- as.integer(factor_age)
+
+#factor educational level
+factor_educ_level <- factor(generativeAI2$`Education level:`, levels = c("High school or lower",
+                                                                         "Some college or vocational training",
+                                                                         "Bachelor's degree",
+                                                                         "Master's degree",
+                                                                         "Doctoral degree"))
+factor_educ_level <- as.integer(factor_educ_level)
+
+familarity_mean <- mean(generativeAI2$`Familiarity with AI Technology`)
+
+#factoring frequency of usage of AI 
+factor_frequency_use <- factor(generativeAI2$`How often do you use generative AI?`, 
+                               levels = c("Several times a day",
+                                          "Once a day",
+                                          "Several times a week",
+                                          "Once a week",
+                                          "Less often"))
+factor_frequency_use <- as.integer(factor_frequency_use)
+
+perf_expect_cols <- generativeAI2[, 9:12]
+mean_expect_cols <- colMeans(perf_expect_cols)
+perf_expect_cols <- as.data.frame(mean_expect_cols)
+perf_expect_cols$total_mean <- mean(mean_expect_cols)
+perf_expect_cols$standard_deviation <- sapply(perf_expect_cols, sd)
+View(perf_expect_cols)
+
+#Read the CSV
+survey <- read.csv("The Use of Generative AI for Students.csv")
+surveyQ <- read.csv("The Use of Generative AI for Students.csv", header = FALSE)
+surveyQ <- surveyQ[-5]
+View(surveyQ)
+View(survey)
+survey <- survey[-5]
+
+View(survey)
+#Make it a table
+surveyDF <- as_tibble(survey)
+
+#Effort Expectancy
+surveyEAOG <- surveyDF[13:16]
+
+#Calculate the mean of each Column
+surveyEA <- colMeans(surveyEAOG)
+surveyEA <- tibble(surveyEA)
+
+#Calculate SD of each column
+surveyEA <- mutate(surveyEA, SD = sapply(surveyEAOG, sd))
+
+#Renaming the Columns
+colnames(surveyEA) <- c("Mean", "SD")
+labelEA <- as.vector(unlist(surveyQ[1, 13:16]))
+
+surveyEA <- cbind(labelEA, surveyEA)
+colnames(surveyEA)[1] <- "Effort Expectancy"
+
+View(surveyEA)
+
+#Attitude toward using technology
+surveyATOG <- surveyDF[17:20]
+View(surveyATOG)
+
+#Calculate the mean of each Column
+surveyAT <- colMeans(surveyATOG)
+surveyAT <- tibble(surveyAT)
+
+#Calculate SD of each column
+surveyAT <- mutate(surveyAT, SD = sapply(surveyATOG, sd))
+
+#Renaming the Columns
+colnames(surveyAT) <- c("Mean", "SD")
+labelAT <- as.vector(unlist(surveyQ[1, 17:20]))
+surveyAT <- cbind(labelAT, surveyAT)
+colnames(surveyAT)[1] <- "Facilitating Conditions"
+
+#View the table
+View(surveyAT)
+
+#Social Influence
+surveySIOG <- surveyDF[21:24]
+View(surveySIOG)
+
+#Calculate the mean of each Column
+surveySI <- colMeans(surveySIOG)
+surveySI <- tibble(surveySI)
+
+#Calculate SD of each column
+surveySI <- mutate(surveySI, SD = sapply(surveySIOG, sd))
+
+#Renaming the Columns
+colnames(surveySI) <- c("Mean", "SD")
+labelSI <- as.vector(unlist(surveyQ[1, 21:24]))
+surveySI <- cbind(labelSI, surveySI)
+colnames(surveySI)[1] <- "Facilitating Conditions"
+
+#View the table
+View(surveySI)
+
+#Facilitating Conditions Range
+surveyFCOG<- surveyDF[25:28]
+view(surveyFCOG)
+
+#Calculate the mean of each Column
+surveyFC <- colMeans(surveyFCOG)
+surveyFC <- tibble(surveyFC)
+
+#Calculate SD of each column
+surveyFC <- mutate(surveyFC, SD = sapply(surveyFCOG, sd))
+
+#Renaming the Columns
+colnames(surveyFC) <- c("Mean", "SD")
+labelFC <- as.vector(unlist(surveyQ[1, 25:28]))
+surveyFC <- cbind(labelFC, surveyFC)
+colnames(surveyFC)[1] <- "Facilitating Conditions"
+
+#View the table
+View(surveyFC)
+
+
+
+#Usage Range
+surveyBIOG <- surveyDF[37:39]
+View(surveyBIOG)
+
+#Calculate the mean of each Column
+surveyBI <- colMeans(surveyBIOG)
+surveyBI <- tibble(surveyBI)
+
+#Calculate SD of each column
+surveyBI <- mutate(surveyBI, SD = sapply(surveyBIOG , sd))
+View(surveyBI)
+colnames(surveyBI)[1] <- "Mean"
+labelBI <- as.vector(unlist(surveyQ[1, 37:39]))
+surveyBI <- cbind(labelBI, surveyBI)
+colnames(surveyBI)[1] <- "Behavioral Intention"
+
+View(surveyBI)
+
+
+#Whole Survey
+
+surveyALLOG <- surveyDF[9:39]
+View(surveyALLOG)
+
+#Calculate the mean of each Column
+surveyALL <- colMeans(surveyALLOG)
+surveyALL <- tibble(surveyALL)
+
+#Calculate SD of each column
+surveyALL <- mutate(surveyALL, SD = sapply(surveyALLOG, sd))
+
+#Renaming the Columns
+colnames(surveyALL) <- c("Mean", "SD")
+labelALL <- as.vector(unlist(surveyQ[1, 9:39]))
+surveyALL <- cbind(labelALL, surveyALL)
+colnames(surveyALL)[1] <- "Whole Survey"
+
+#View the table
+View(surveyALL)
+
+```
+
+```{r Plotting}
+# Create a table with the count of each level in the 'Sex' column
+sex_counts <- table(survey$Sex)
+
+# Convert the table to a data frame for plotting
+sex_df <- as.data.frame(sex_counts)
+colnames(sex_df) <- c("Sex", "Count")
+
+# Pie chart for 'Sex'
+ggplot(sex_df, aes(x = "", y = Count, fill = Sex)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("pink", "blue"))+
+  geom_text(aes(label = Count), position = position_stack(vjust = 0.5)) + # Display only counts
+  theme_void() +
+  labs(title = "Sexes of Participants", x = NULL, y = NULL) +
+  theme(legend.title = element_blank())
+
+# Plot for Age
+ggplot(survey, aes(x = "", y = ..count.., fill = Age)) +
+  geom_bar(stat = "count", width = 1) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("peru"))+
+  geom_text(aes(label = ..count..), stat = "count", position = position_stack(vjust = 0.5)) + # Display only counts
+  theme_void() +
+  labs(title = "Age Median", x = NULL, y = NULL) +
+  theme(legend.title = element_blank())
+
+#Plot for Educational Level
+ggplot(survey, aes(x = "", y = ..count.., fill = EducationLVL)) +
+  geom_bar(stat = "count", width = 1) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("orange", "yellow","green"))+
+  geom_text(aes(label = ..count..), stat = "count", position = position_stack(vjust = 0.5)) + # Display only counts
+  theme_void() +
+  labs(title = "Educational Level of Participants", x = NULL, y = NULL) +
+  theme(legend.title = element_blank())
+
+# Converting Familiarity with AI Technology to a factor variable 
+survey$Familiarity.with.AI.Technology <- as.factor(survey$Familiarity.with.AI.Technology)
+
+# Pie chart for Familiarity with AI Technology
+ggplot(survey, aes(x = "", y = ..count.., fill = `Familiarity.with.AI.Technology`)) +
+  geom_bar(stat = "count", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = ..count..), stat = "count", position = position_stack(vjust = 0.5)) + # Display only counts
+  theme_void() +
+  labs(title = "Participant's Familiarity with AI Technology", x = NULL, y = NULL) +
+  theme(legend.title = element_blank())
+
+# Converting Have you used Generative AI Technology Before?  to a factor variable
+survey$`Have.you.used.Generative.AI.technology.before.` <- as.factor(survey$`Have.you.used.Generative.AI.technology.before.`)
+
+# Pie chart for Have you used Generative AI Technology Before? 
+ggplot(survey, aes(x = "", y = ..count.., fill = `Have.you.used.Generative.AI.technology.before.`)) +
+  geom_bar(stat = "count", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = ..count..), stat = "count", position = position_stack(vjust = 0.5)) + 
+  scale_fill_manual(values = c("wheat", "cyan")) + 
+  theme_void() +
+  labs(title = "Participant's Usage of Generative AI Technology", x = NULL, y = NULL) +
+  theme(legend.title = element_blank())
+
+# Converting How often do you use generative AI?  to a factor variable
+survey$`How.often.do.you.use.generative.AI.` <- as.factor(survey$`How.often.do.you.use.generative.AI.`)
+
+# Pie chart for How often do you use generative AI? 
+ggplot(survey, aes(x = "", y = ..count.., fill = `How.often.do.you.use.generative.AI.`)) +
+  geom_bar(stat = "count", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = ..count..), stat = "count", position = position_stack(vjust = 0.5)) + 
+  scale_fill_manual(values = c("coral", "darkseagreen", "beige", "khaki")) + 
+  theme_void() +
+  labs(title = "Participant's of Usage Frequency of Generative AI", x = NULL, y = NULL) +
+  theme(legend.title= element_blank())
+
+```
+
+
